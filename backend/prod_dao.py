@@ -1,11 +1,12 @@
-from http.client import responses
-
-import mysql.connector
+from sql_connection import get_sql_connection
 
 def get_all_prod(connection):
-   cursor = connection.cursor
+    cursor = connection.cursor()
 
-    cursor.execute(queue)
+    query = ("SELECT products.product_id, products.name, products.uom_id, products.price_per_unit, uom.uom_name "
+             "FROM products inner join uom on products.uom_id=uom.uom_id")
+
+    cursor.execute(query)
 
     response = []
     for (product_id, name, uom_id, price_per_unit, uom_name) in cursor:
@@ -19,7 +20,7 @@ def get_all_prod(connection):
            }
        )
 
-    cnx.close()
     return response
 if __name__ == '__main__':
-    print(get_all_prod())
+    connection = get_sql_connection()
+    print(get_all_prod(connection))
